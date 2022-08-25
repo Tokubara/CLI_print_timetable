@@ -8,9 +8,8 @@ filter=dplyr::filter
 ## [17] "主讲教师"        
 raw_1<-read_excel("2022年秋季学期全校课表.xlsx", col_types = "text")
 ## 081201M05003H(超大规模集成电路基础), 0839X1M05005H(安全芯片技术), 081201M04002H(计算机体系结构), 081203M04001H(计算机算法设计与分析)
-course_id<-c("0839X1M05005H","081201M05003H", "081201M04002H", "081203M04001H", "120400MGB001H-02", "083900MGB001H-02") #  "120400MGB001H-23", 学术道德与学术写作规范-通论
+my_courses<-c("0839X1M05005H","081201M05003H", "081201M04002H", "081203M04001H", "120400MGB001H-02", "083900MGB001H-02") #  "120400MGB001H-23", 学术道德与学术写作规范-通论
 
-my_courses=raw_1%>%filter(`课程编码` %in% course_id) # course_id<-c("081201M05003H", "0839X1M05005H", "081201M04002H", "081203M04001H", "010108MGB001H-02", "120400MGB001H-23", "083900MGB001H-01")
 
 ## > my_courses$`开课周`
 ## [1] "第2-12周"     "第2-20周"     "第2-16周"     "第2-20周"     "第8-12周"
@@ -19,7 +18,8 @@ my_courses=raw_1%>%filter(`课程编码` %in% course_id) # course_id<-c("081201M
 ## [1] "周一(9-12)" "周一(9-11)" "周四(5-7)"  "周二(9-11)" "周二(9-10)"
 ## [6] "周三(9-11)" "周一(9-10)"
 
-check_and_print<-function(my_courses, print_table=FALSE) {
+check_and_print<-function(course_id, print_table=FALSE) {
+    my_courses=raw_1%>%filter(`课程编码` %in% course_id) # course_id<-c("081201M05003H", "0839X1M05005H", "081201M04002H", "081203M04001H", "010108MGB001H-02", "120400MGB001H-23", "083900MGB001H-01")
 timetable=list()
 for(i in c(1:20)) { # 一共 20 周
     timetable[[i]]=matrix("",nrow=12,ncol=7, dimnames=list(as.character(c(1:12)), weekname)) # 一天 12 节课, 7 天
@@ -72,3 +72,7 @@ for(tonglun_id in tonglun_all_id) {
         tonglun_available=c(tonglun_available, tonglun_id)
     }
 }
+
+## wa=raw_1%>%dplyr::filter(`课程名称` == "女子蛙泳")
+length(tonglun_available)
+length(tonglun_all_id)
