@@ -8,7 +8,8 @@ filter=dplyr::filter
 ## [17] "主讲教师"        
 raw_1<-read_excel("2022年秋季学期全校课表.xlsx", col_types = "text")
 ## 081201M05003H(超大规模集成电路基础), 0839X1M05005H(安全芯片技术), 081201M04002H(计算机体系结构), 081203M04001H(计算机算法设计与分析)
-my_courses<-c("0839X1M05005H","081201M05003H", "081201M04002H", "081203M04001H", "120400MGB001H-02", "083900MGB001H-02") #  "120400MGB001H-23", 学术道德与学术写作规范-通论
+## my_courses<-c("0839X1M05005H","081201M05003H", "081201M04002H", "081203M04001H", "120400MGB001H-02", "083900MGB001H-02") #  "120400MGB001H-23", 学术道德与学术写作规范-通论
+course_id<-c("081203M04002H","081201M04002H","081203M04001H","081201M05003H","081202M05010H","0839X1M05005H","120400MGB001H-02","010108MGB001H-20","030500MGB001H-21")
 
 
 ## > my_courses$`开课周`
@@ -18,16 +19,16 @@ my_courses<-c("0839X1M05005H","081201M05003H", "081201M04002H", "081203M04001H",
 ## [1] "周一(9-12)" "周一(9-11)" "周四(5-7)"  "周二(9-11)" "周二(9-10)"
 ## [6] "周三(9-11)" "周一(9-10)"
 
+chinese_day_map=c("一"=1, "二"=2,"三"=3,"四"=4,"五"=5,"六"=6,"日"=7)
+weekname=c("Mon","Tue","Wed","Thur","Fri","Sat","Sun")
 check_and_print<-function(course_id, print_table=FALSE) {
     my_courses=raw_1%>%filter(`课程编码` %in% course_id) # course_id<-c("081201M05003H", "0839X1M05005H", "081201M04002H", "081203M04001H", "010108MGB001H-02", "120400MGB001H-23", "083900MGB001H-01")
 timetable=list()
 for(i in c(1:20)) { # 一共 20 周
-    timetable[[i]]=matrix("",nrow=12,ncol=7, dimnames=list(as.character(c(1:12)), weekname)) # 一天 12 节课, 7 天
+    timetable[[i]]=matrix("",nrow=12,ncol=7, dimnames=list(str_c("第", as.character(c(1:12)), "节"), weekname)) # 一天 12 节课, 7 天
 }
 
 n=nrow(my_courses)
-chinese_day_map=c("一"=1, "二"=2,"三"=3,"四"=4,"五"=5,"六"=6,"日"=7)
-weekname=c("Mon","Tue","Wed","Thur","Fri","Sat","Sun")
 for(i in c(1:n)) {
   ## i =1 
   row = my_courses[i,]
@@ -54,25 +55,27 @@ return(FALSE)
 }
 }
 if(print_table==TRUE) {
-pandoc.table(timetable[[2]], style = 'grid', keep.line.breaks = TRUE)
+    pandoc.table(timetable[[2]], style = 'grid', keep.line.breaks = TRUE, emphasize.verbatim.rows=c())
 }
 return(TRUE)
 }
 
+check_and_print(course_id, TRUE)
 # 修改 "课时/学分" 变量
 my_courses$`课程名称`
 
-# 选 学术道德与学术写作规范-通论
-tonglun=raw_1%>%dplyr::filter(`课程名称` == "学术道德与学术写作规范-通论")
-tonglun_all_id=tonglun$`课程编码`
-## tonglun%>%filter(==1)
-tonglun_available=c()
-for(tonglun_id in tonglun_all_id) {
-    if(check_and_print(c(course_id, tonglun_id))) {
-        tonglun_available=c(tonglun_available, tonglun_id)
-    }
-}
+## # %%
+## # 选 学术道德与学术写作规范-通论
+## tonglun=raw_1%>%dplyr::filter(`课程名称` == "学术道德与学术写作规范-通论")
+## tonglun_all_id=tonglun$`课程编码`
+## ## tonglun%>%filter(==1)
+## tonglun_available=c()
+## for(tonglun_id in tonglun_all_id) {
+##     if(check_and_print(c(course_id, tonglun_id))) {
+##         tonglun_available=c(tonglun_available, tonglun_id)
+##     }
+## }
 
-## wa=raw_1%>%dplyr::filter(`课程名称` == "女子蛙泳")
-length(tonglun_available)
-length(tonglun_all_id)
+## ## wa=raw_1%>%dplyr::filter(`课程名称` == "女子蛙泳")
+## length(tonglun_available)
+## length(tonglun_all_id)
