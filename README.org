@@ -1,0 +1,28 @@
+* CLI_print_timetable_ucas
+** 依赖
+需要安装的依赖: R, perl, 以及 R 的以下包:
+#+begin_example
+tidyr
+readxl
+pander
+#+end_example
+
+** 用法
+先把 2022年秋季学期全校课表.xlsx 放到 info.R 同目录下.
+
+#+begin_example
+chmod u+x info.R
+./info.R
+#+end_example
+
+没有参数会输出当前周的课表, 如果是 ./info.R 2, 就是输出第 2 周的课表. 合法的周数范围是 1 到 20. 就如:
+
+[[file:fig/Pasted_image_20220828110710.png]]
+
+** 硬编码
+
+有多处硬编码的地方. 主要包括:
+- 凡是出现了绝对路径的地方, 都是硬编码, 需要修改
+- course_id, 填你自己的课程的 "课程编码".
+- course_time, 填时间段. 不同校区有区别. 当前填的是雁栖湖的时间. 如果需要改成其它校区的时间, 可以先修改 time.txt, 再执行 perl time.pl time.txt, 就会输出 time 向量的写法, 粘贴到 info.R 中 course_time 定义的位置, 注意perl 的结果.
+- 当前只适用于秋季学期, 如果是春季学期, 需要修改 read_excel 路径. 虽然认为格式应该不变, 但还是应该检查一下.
